@@ -4,15 +4,10 @@
 
 # Implementar as seguintes funcionalidades no sistema: 
 
-### 1. Decorador de log
-
-### 2. Gerador de relatórios
-
-### 3. Iterador personalizado
-
-### 4. Data e hora
-
-
+1. Decorador de log
+2. Gerador de relatórios
+3. Iterador personalizado
+4. Data e hora
 
 * Implemente um decorador que seja aplicado a todas as funções de transações (depósito, saque, criação de conta, etc). Esse decorador deve registrar (printar) a data e hora de cada transação, bem como o tipo de transação.
 
@@ -26,7 +21,8 @@ Mostre no extrato, a data e hora de todas as transações.
 
 * Modificar o atual decorador de **log**, que imprime informações no console, para que ele salve essas informações em um arquivo de log, possibilitando uma revisão mais fácil e uma análise mais detalhada das operações dos usuários.
 
-* O decorador deve registrar o seguinte para cada chamada de função:
+## O decorador deve registrar o seguinte para cada chamada de função:
+
 1. Data e hora atuais  
 2. Nome da função  
 3. Argumentos da função  
