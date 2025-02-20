@@ -88,17 +88,13 @@ class Conta:
     def sacar(self, valor):
         saldo = self.saldo
         excedeu_saldo = valor > saldo
-        # - Uso de `if`, `elif`, `else`:
-        # - Para controle de fluxo condicional.
-        # - Exemplo: `if excedeu_saldo:` no método `sacar`.
+        
         if excedeu_saldo:
             print("\n@@@ Operação falhou! Você não tem saldo suficiente. @@@")
 
         elif valor > 0:
             self._saldo -= valor
-            # - Uso de `print()`:
-            # - Para exibir informações no console.
-            # - Exemplo: `print("\n=== Saque realizado com sucesso! ===")`.
+            
             print("\n=== Saque realizado com sucesso! ===")
             return True
 
