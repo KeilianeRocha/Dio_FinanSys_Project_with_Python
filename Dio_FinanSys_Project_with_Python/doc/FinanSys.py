@@ -4,10 +4,11 @@ from datetime import datetime
 from pathlib import Path
 
 
-ROOT_PATH = Path(__file__).parent  
+ROOT_PATH = Path(__file__).parent
+
 
 class ContaIterador:
-    
+
     def __init__(self, contas):
         self.contas = contas
         self._index = 0
@@ -30,7 +31,7 @@ class Cliente:
         self.contas = []
 
     def realizar_transacao(self, conta, transacao):
-        
+
         if len(conta.historico.transacoes_do_dia()) >= 2:
             print("\n@@@ Você excedeu o número de transações permitidas para hoje!")
             return
@@ -59,7 +60,6 @@ class Conta:
         self._agencia = "0001"
         self._cliente = cliente
         self._historico = Historico()
-
 
     @classmethod
     def nova_conta(cls, cliente, numero):
@@ -128,7 +128,6 @@ class ContaCorrente(Conta):
             [
                 transacao
                 for transacao in self.historico.transacoes
-                
                 if transacao["tipo"] == Saque.__name__
             ]
         )
@@ -166,7 +165,6 @@ class Historico:
 
     def adicionar_transacao(self, transacao):
         self._transacoes.append(
-           
             {
                 "tipo": transacao.__class__.__name__,
                 "valor": transacao.valor,
@@ -230,13 +228,13 @@ class Deposito(Transacao):
 
 
 def log_transacao(func):
-    
+
     def envelope(*args, **kwargs):
         resultado = func(*args, **kwargs)
         data_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
+
         try:
-            
+
             with open(ROOT_PATH / "log.txt", "a", encoding="utf-8") as arquivo:
                 arquivo.write(
                     f"[{data_hora}] Função '{func.__name__}' executada com argumentos {args} e {kwargs}. Retornou {resultado}\n"
@@ -262,7 +260,7 @@ def menu():
     [nu]\tNovo usuário
     [q]\tSair
     => """
-   
+
     return input(textwrap.dedent(menu))
 
 
@@ -274,7 +272,7 @@ def filtrar_cliente(cpf, clientes):
 def recuperar_conta_cliente(cliente):
     if not cliente:
         print("\n@@@ Cliente não encontrado! @@@")
-        
+
         return None
 
     if not cliente.contas:
@@ -292,7 +290,7 @@ def depositar(clientes):
     if not cliente:
         print("\n@@@ Cliente não encontrado! @@@")
         return
-    
+
     valor = float(input("Informe o valor do depósito: "))
     transacao = Deposito(valor)
 
@@ -324,7 +322,7 @@ def sacar(clientes):
 
 @log_transacao
 def exibir_extrato(clientes):
-    
+
     cpf = input("Informe o CPF do cliente: ")
     cliente = filtrar_cliente(cpf, clientes)
 
@@ -343,7 +341,7 @@ def exibir_extrato(clientes):
     if not transacoes:
         extrato = "Não foram realizadas movimentações."
     else:
-       
+
         for transacao in transacoes:
             extrato += f"\n{transacao['tipo']}:\n\tR$ {transacao['valor']:.2f}"
 
@@ -402,7 +400,7 @@ def listar_contas(contas):
 def main():
     clientes = []
     contas = []
-    
+
     while True:
         opcao = menu()
 
@@ -420,7 +418,6 @@ def main():
 
         elif opcao == "nc":
             numero_conta = len(contas) + 1
-            
 
             criar_conta(numero_conta, clientes, contas)
 
@@ -428,7 +425,7 @@ def main():
             listar_contas(contas)
 
         elif opcao == "q":
-            
+
             break
 
         else:
