@@ -3,15 +3,11 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path
 
-# - Uso de `Path`:
-# - Para manipulação de caminhos de arquivos de forma segura e independente do sistema operacional.
-# - Exemplo: `ROOT_PATH = Path(__file__).parent`.
+
 ROOT_PATH = Path(__file__).parent  
 
 class ContaIterador:
-    # - Uso de `raise`:
-    # - Para lançar exceções.
-    # - Exemplo: `raise StopIteration` no método `__next__`.
+    
     def __init__(self, contas):
         self.contas = contas
         self._index = 0
@@ -34,10 +30,7 @@ class Cliente:
         self.contas = []
 
     def realizar_transacao(self, conta, transacao):
-        # - Uso de `len`:
-        # - Para obter o tamanho de uma coleção.
-        # - Exemplo: `if len(conta.historico.transacoes_do_dia()) >= 2:`.
-
+        
         if len(conta.historico.transacoes_do_dia()) >= 2:
             print("\n@@@ Você excedeu o número de transações permitidas para hoje!")
             return
@@ -67,9 +60,7 @@ class Conta:
         self._cliente = cliente
         self._historico = Historico()
 
-    # - Métodos de classe (`@classmethod`):
-    # - Métodos que pertencem à classe, não à instância.
-    # - Exemplo: `nova_conta` na classe `Conta`.
+
     @classmethod
     def nova_conta(cls, cliente, numero):
         return cls(numero, cliente)
@@ -137,8 +128,7 @@ class ContaCorrente(Conta):
             [
                 transacao
                 for transacao in self.historico.transacoes
-                # - Uso de `if __name__ == "__main__":`
-                # - Garante que o código só seja executado quando o script é rodado diretamente, não quando importado.
+                
                 if transacao["tipo"] == Saque.__name__
             ]
         )
@@ -176,9 +166,7 @@ class Historico:
 
     def adicionar_transacao(self, transacao):
         self._transacoes.append(
-            # - Uso de `dict`:
-            # - Para criar e manipular dicionários.
-            # - Exemplo: `self._transacoes.append({"tipo": transacao.__class__.__name__, "valor": transacao.valor, "data": datetime.now().strftime("%d-%m-%Y %H:%M:%S")})`.
+           
             {
                 "tipo": transacao.__class__.__name__,
                 "valor": transacao.valor,
@@ -199,9 +187,7 @@ class Historico:
             if tipo_transacao is None or transacao["tipo"] == tipo_transacao:
                 yield transacao
 
-# - Métodos abstratos (`@abstractmethod`):
-# - Métodos que devem ser implementados por classes filhas.
-# - Exemplo: `valor` e `registrar` na classe `Transacao`.
+
 class Transacao(ABC):
     @property
     @abstractmethod
@@ -242,23 +228,15 @@ class Deposito(Transacao):
         if sucesso_transacao:
             conta.historico.adicionar_transacao(self)
 
-# - Decoradores:
-# - Funções que modificam o comportamento de outras funções ou métodos.
-# - Exemplo: `@log_transacao` para registrar chamadas de funções.
+
 def log_transacao(func):
-    # - Uso de `*args` e `**kwargs`:
-    # - Permitem que funções aceitem um número variável de argumentos.
-    # - Exemplo: `def envelope(*args, **kwargs)` no decorador `log_transacao`.
+    
     def envelope(*args, **kwargs):
         resultado = func(*args, **kwargs)
         data_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # - Manipulação de datas:
-        # - Uso de `datetime.now()` para obter a data/hora atual.
-        # - Formatação de datas com `strftime`.
+        
         try:
-            # - Gerenciamento de arquivos:
-            # - Uso de `with open()` para abrir e fechar arquivos de forma segura.
-            # - Modos de abertura: 'a' para adicionar ao final do arquivo.
+            
             with open(ROOT_PATH / "log.txt", "a", encoding="utf-8") as arquivo:
                 arquivo.write(
                     f"[{data_hora}] Função '{func.__name__}' executada com argumentos {args} e {kwargs}. Retornou {resultado}\n"
@@ -284,14 +262,10 @@ def menu():
     [nu]\tNovo usuário
     [q]\tSair
     => """
-    # - Uso de `textwrap.dedent`:
-    # - Remove indentação comum de strings multilinha.
-    # - Exemplo: `textwrap.dedent(menu)`.
+   
     return input(textwrap.dedent(menu))
 
-# - Uso de `list`:
-# - Para criar e manipular listas.
-# - Exemplo: `clientes_filtrados = [cliente for cliente in clientes if cliente.cpf == cpf]`.
+
 def filtrar_cliente(cpf, clientes):
     clientes_filtrados = [cliente for cliente in clientes if cliente.cpf == cpf]
     return clientes_filtrados[0] if clientes_filtrados else None
@@ -300,9 +274,7 @@ def filtrar_cliente(cpf, clientes):
 def recuperar_conta_cliente(cliente):
     if not cliente:
         print("\n@@@ Cliente não encontrado! @@@")
-        # - Uso de `None`:
-        # - Para representar a ausência de valor.
-        # - Exemplo: `return None` em `recuperar_conta_cliente`.
+        
         return None
 
     if not cliente.contas:
@@ -320,9 +292,7 @@ def depositar(clientes):
     if not cliente:
         print("\n@@@ Cliente não encontrado! @@@")
         return
-    # - Uso de `float`:
-    # - Para converter strings em números decimais.
-    # - Exemplo: `valor = float(input("Informe o valor do depósito: "))`.
+    
     valor = float(input("Informe o valor do depósito: "))
     transacao = Deposito(valor)
 
@@ -354,9 +324,7 @@ def sacar(clientes):
 
 @log_transacao
 def exibir_extrato(clientes):
-    # - Uso de `input()`:
-    # - Para capturar entrada do usuário.
-    # - Exemplo: `cpf = input("Informe o CPF do cliente: ")`.
+    
     cpf = input("Informe o CPF do cliente: ")
     cliente = filtrar_cliente(cpf, clientes)
 
@@ -375,9 +343,7 @@ def exibir_extrato(clientes):
     if not transacoes:
         extrato = "Não foram realizadas movimentações."
     else:
-        # - Uso de `for`:
-        # - Para iterar sobre coleções.
-        # - Exemplo: `for transacao in transacoes:` no método `exibir_extrato`.
+       
         for transacao in transacoes:
             extrato += f"\n{transacao['tipo']}:\n\tR$ {transacao['valor']:.2f}"
 
@@ -436,9 +402,7 @@ def listar_contas(contas):
 def main():
     clientes = []
     contas = []
-    # - Uso de `while`:
-    # - Para loops que continuam enquanto uma condição for verdadeira.
-    # - Exemplo: `while True:` no método `main`.
+    
     while True:
         opcao = menu()
 
@@ -455,10 +419,8 @@ def main():
             criar_cliente(clientes)
 
         elif opcao == "nc":
-            numero_conta = len(contas) 
-            # - Uso de `int`:
-            # - Para converter strings em números inteiros.
-            # - Exemplo: `numero_conta = len(contas) + 1`.
+            numero_conta = len(contas) + 1
+            
 
             criar_conta(numero_conta, clientes, contas)
 
@@ -466,9 +428,7 @@ def main():
             listar_contas(contas)
 
         elif opcao == "q":
-            # - Uso de `break`:
-            # - Para sair de loops.
-            # - Exemplo: `break` no método `main` para sair do loop infinito.
+            
             break
 
         else:
