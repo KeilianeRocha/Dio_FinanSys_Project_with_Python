@@ -2,16 +2,22 @@ import textwrap
 from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path
+# - Importação de módulos:
+# - `textwrap` ⇒ formatar strings com indentação e quebras de linha.
+# - `abc`: ⇒ criar classes abstratas e métodos abstratos.
+# - `datetime`: ⇒ manipulação de datas e horas.
+# - `pathlib`: ⇒ manipulação de caminhos de arquivos de forma independente do sistema operacional.
 
-# - Uso de `Path`:
-# - Para manipulação de caminhos de arquivos de forma segura e independente do sistema operacional.
-# - Exemplo: `ROOT_PATH = Path(__file__).parent`.
-ROOT_PATH = Path(__file__).parent  
+ROOT_PATH = Path(__file__).parent  # Mostra o caminho para criar o log txt
 
+# - Métodos especiais:
+# - `__init__`: Construtor da classe, chamado ao criar uma instância.
+# - `__repr__`: Retorna uma representação em string do objeto.
+# - `__iter__` e `__next__`: Permitem que um objeto seja iterável.
 class ContaIterador:
-    # - Uso de `raise`:
-    # - Para lançar exceções.
-    # - Exemplo: `raise StopIteration` no método `__next__`.
+    # - Iteradores:
+    # - Objetos que permitem iterar sobre uma coleção.
+    # - Exemplo: `ContaIterador` para iterar sobre contas.
     def __init__(self, contas):
         self.contas = contas
         self._index = 0
@@ -34,10 +40,6 @@ class Cliente:
         self.contas = []
 
     def realizar_transacao(self, conta, transacao):
-        # - Uso de `len`:
-        # - Para obter o tamanho de uma coleção.
-        # - Exemplo: `if len(conta.historico.transacoes_do_dia()) >= 2:`.
-
         if len(conta.historico.transacoes_do_dia()) >= 2:
             print("\n@@@ Você excedeu o número de transações permitidas para hoje!")
             return
@@ -47,8 +49,14 @@ class Cliente:
     def adicionar_conta(self, conta):
         self.contas.append(conta)
 
+# - Herança:
+# - Uma classe pode herdar atributos e métodos de outra classe.
+# - Exemplo: `PessoaFisica` herda de `Cliente`.
 
 class PessoaFisica(Cliente):
+    # - Uso de `super()`:
+    # - Chama métodos da classe pai.
+    # - Exemplo: `super().__init__(endereco)` na classe `PessoaFisica`.
     def __init__(self, nome, data_nascimento, cpf, endereco):
         super().__init__(endereco)
         self.nome = nome
@@ -58,8 +66,14 @@ class PessoaFisica(Cliente):
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__}: ('{self.cpf}')>"
 
+# - Definição de classes:
+# - Classes são usadas para criar objetos que encapsulam dados (atributos) e comportamentos (métodos).
+# - Exemplo: `Cliente`, `Conta`, `Historico`, etc.
 
 class Conta:
+    # - Encapsulamento:
+    # - Uso de atributos privados (com `_`) para proteger dados.
+    # - Exemplo: `_saldo`, `_numero`, `_agencia`, etc.
     def __init__(self, numero, cliente):
         self._saldo = 0
         self._numero = numero
@@ -67,13 +81,13 @@ class Conta:
         self._cliente = cliente
         self._historico = Historico()
 
-    # - Métodos de classe (`@classmethod`):
-    # - Métodos que pertencem à classe, não à instância.
-    # - Exemplo: `nova_conta` na classe `Conta`.
     @classmethod
     def nova_conta(cls, cliente, numero):
         return cls(numero, cliente)
 
+    # - Propriedades (`@property`):
+    # - Permitem definir métodos que podem ser acessados como atributos.
+    # - Exemplo: `saldo`, `numero`, `agencia`, etc
     @property
     def saldo(self):
         return self._saldo
@@ -95,19 +109,17 @@ class Conta:
         return self._historico
 
     def sacar(self, valor):
+        # - Uso de `return`:
+        # - Para retornar valores de funções.
+        # - Exemplo: `return True` no método `sacar`.
         saldo = self.saldo
         excedeu_saldo = valor > saldo
-        # - Uso de `if`, `elif`, `else`:
-        # - Para controle de fluxo condicional.
-        # - Exemplo: `if excedeu_saldo:` no método `sacar`.
+
         if excedeu_saldo:
             print("\n@@@ Operação falhou! Você não tem saldo suficiente. @@@")
 
         elif valor > 0:
             self._saldo -= valor
-            # - Uso de `print()`:
-            # - Para exibir informações no console.
-            # - Exemplo: `print("\n=== Saque realizado com sucesso! ===")`.
             print("\n=== Saque realizado com sucesso! ===")
             return True
 
@@ -132,13 +144,14 @@ class ContaCorrente(Conta):
         self._limite = limite
         self._limite_saques = limite_saques
 
+    # - List comprehensions:
+    # - Sintaxe concisa para criar listas.
+    # - Exemplo: `[transacao for transacao in self.historico.transacoes if transacao["tipo"] == Saque.__name__]`.
     def sacar(self, valor):
         numero_saques = len(
             [
                 transacao
                 for transacao in self.historico.transacoes
-                # - Uso de `if __name__ == "__main__":`
-                # - Garante que o código só seja executado quando o script é rodado diretamente, não quando importado.
                 if transacao["tipo"] == Saque.__name__
             ]
         )
@@ -156,7 +169,10 @@ class ContaCorrente(Conta):
             return super().sacar(valor)
 
         return False
-
+    
+    # - Formatação de strings:
+    # - Uso de f-strings para inserir variáveis em strings.
+    # - Exemplo: f"Agência:\t{self.agencia}".
     def __str__(self):
         return f"""\
             Agência:\t{self.agencia}
@@ -176,9 +192,6 @@ class Historico:
 
     def adicionar_transacao(self, transacao):
         self._transacoes.append(
-            # - Uso de `dict`:
-            # - Para criar e manipular dicionários.
-            # - Exemplo: `self._transacoes.append({"tipo": transacao.__class__.__name__, "valor": transacao.valor, "data": datetime.now().strftime("%d-%m-%Y %H:%M:%S")})`.
             {
                 "tipo": transacao.__class__.__name__,
                 "valor": transacao.valor,
@@ -194,18 +207,22 @@ class Historico:
             if datetime.strptime(transacao["data"], "%d-%m-%Y %H:%M:%S").date() == hoje
         ]
 
+    # - Uso de `yield`:
+    # - Transforma uma função em um gerador, que pode ser iterado.
+    # - Exemplo: `gerar_relatorio` na classe `Historico`.
     def gerar_relatorio(self, tipo_transacao=None):
         for transacao in self._transacoes:
             if tipo_transacao is None or transacao["tipo"] == tipo_transacao:
                 yield transacao
 
-# - Métodos abstratos (`@abstractmethod`):
-# - Métodos que devem ser implementados por classes filhas.
-# - Exemplo: `valor` e `registrar` na classe `Transacao`.
+
 class Transacao(ABC):
     @property
     @abstractmethod
     def valor(self):
+        # - Uso de `pass`:
+        # - Para indicar um bloco de código vazio.
+        # - Exemplo: `pass` em funções ou métodos que não têm implementação.
         pass
 
     @abstractmethod
@@ -242,23 +259,16 @@ class Deposito(Transacao):
         if sucesso_transacao:
             conta.historico.adicionar_transacao(self)
 
-# - Decoradores:
-# - Funções que modificam o comportamento de outras funções ou métodos.
-# - Exemplo: `@log_transacao` para registrar chamadas de funções.
+
 def log_transacao(func):
-    # - Uso de `*args` e `**kwargs`:
-    # - Permitem que funções aceitem um número variável de argumentos.
-    # - Exemplo: `def envelope(*args, **kwargs)` no decorador `log_transacao`.
     def envelope(*args, **kwargs):
         resultado = func(*args, **kwargs)
         data_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # - Manipulação de datas:
-        # - Uso de `datetime.now()` para obter a data/hora atual.
-        # - Formatação de datas com `strftime`.
+
+        # - Tratamento de exceções:
+        # - Uso de `try` e `except` para capturar e tratar erros.
+        # - Exemplo: Tratamento de `PermissionError` ao escrever no arquivo de log.
         try:
-            # - Gerenciamento de arquivos:
-            # - Uso de `with open()` para abrir e fechar arquivos de forma segura.
-            # - Modos de abertura: 'a' para adicionar ao final do arquivo.
             with open(ROOT_PATH / "log.txt", "a", encoding="utf-8") as arquivo:
                 arquivo.write(
                     f"[{data_hora}] Função '{func.__name__}' executada com argumentos {args} e {kwargs}. Retornou {resultado}\n"
@@ -272,7 +282,9 @@ def log_transacao(func):
 
     return envelope
 
-
+# - Funções:
+# - Blocos de código reutilizáveis.
+# - Exemplo: `menu()`, `filtrar_cliente()`, `recuperar_conta_cliente()`, etc.
 def menu():
     menu = """\n
     ================ MENU ================
@@ -284,14 +296,9 @@ def menu():
     [nu]\tNovo usuário
     [q]\tSair
     => """
-    # - Uso de `textwrap.dedent`:
-    # - Remove indentação comum de strings multilinha.
-    # - Exemplo: `textwrap.dedent(menu)`.
     return input(textwrap.dedent(menu))
 
-# - Uso de `list`:
-# - Para criar e manipular listas.
-# - Exemplo: `clientes_filtrados = [cliente for cliente in clientes if cliente.cpf == cpf]`.
+
 def filtrar_cliente(cpf, clientes):
     clientes_filtrados = [cliente for cliente in clientes if cliente.cpf == cpf]
     return clientes_filtrados[0] if clientes_filtrados else None
@@ -300,9 +307,6 @@ def filtrar_cliente(cpf, clientes):
 def recuperar_conta_cliente(cliente):
     if not cliente:
         print("\n@@@ Cliente não encontrado! @@@")
-        # - Uso de `None`:
-        # - Para representar a ausência de valor.
-        # - Exemplo: `return None` em `recuperar_conta_cliente`.
         return None
 
     if not cliente.contas:
@@ -320,9 +324,7 @@ def depositar(clientes):
     if not cliente:
         print("\n@@@ Cliente não encontrado! @@@")
         return
-    # - Uso de `float`:
-    # - Para converter strings em números decimais.
-    # - Exemplo: `valor = float(input("Informe o valor do depósito: "))`.
+
     valor = float(input("Informe o valor do depósito: "))
     transacao = Deposito(valor)
 
@@ -354,9 +356,6 @@ def sacar(clientes):
 
 @log_transacao
 def exibir_extrato(clientes):
-    # - Uso de `input()`:
-    # - Para capturar entrada do usuário.
-    # - Exemplo: `cpf = input("Informe o CPF do cliente: ")`.
     cpf = input("Informe o CPF do cliente: ")
     cliente = filtrar_cliente(cpf, clientes)
 
@@ -375,9 +374,6 @@ def exibir_extrato(clientes):
     if not transacoes:
         extrato = "Não foram realizadas movimentações."
     else:
-        # - Uso de `for`:
-        # - Para iterar sobre coleções.
-        # - Exemplo: `for transacao in transacoes:` no método `exibir_extrato`.
         for transacao in transacoes:
             extrato += f"\n{transacao['tipo']}:\n\tR$ {transacao['valor']:.2f}"
 
@@ -427,6 +423,9 @@ def criar_conta(numero_conta, clientes, contas):
 
 
 def listar_contas(contas):
+    # - Uso de `str`:
+    # - Para converter objetos em strings.
+    # - Exemplo: `str(conta)` no método `listar_contas`.
     iterador = ContaIterador(contas)
     for conta in iterador:
         print("=" * 100)
@@ -436,9 +435,7 @@ def listar_contas(contas):
 def main():
     clientes = []
     contas = []
-    # - Uso de `while`:
-    # - Para loops que continuam enquanto uma condição for verdadeira.
-    # - Exemplo: `while True:` no método `main`.
+
     while True:
         opcao = menu()
 
@@ -455,20 +452,13 @@ def main():
             criar_cliente(clientes)
 
         elif opcao == "nc":
-            numero_conta = len(contas) 
-            # - Uso de `int`:
-            # - Para converter strings em números inteiros.
-            # - Exemplo: `numero_conta = len(contas) + 1`.
-
+            numero_conta = len(contas) + 1
             criar_conta(numero_conta, clientes, contas)
 
         elif opcao == "lc":
             listar_contas(contas)
 
         elif opcao == "q":
-            # - Uso de `break`:
-            # - Para sair de loops.
-            # - Exemplo: `break` no método `main` para sair do loop infinito.
             break
 
         else:

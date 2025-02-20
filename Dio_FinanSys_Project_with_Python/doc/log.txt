@@ -8,3 +8,7 @@
 [2025-02-19 17:53:27] Função 'exibir_extrato' executada com argumentos ([<PessoaFisica: ('01')>],) e {}. Retornou None
 [2025-02-19 17:53:55] Função 'sacar' executada com argumentos ([<PessoaFisica: ('01')>],) e {}. Retornou None
 [2025-02-19 17:54:00] Função 'exibir_extrato' executada com argumentos ([<PessoaFisica: ('01')>],) e {}. Retornou None
+[2025-02-19 20:09:25] Função 'criar_cliente' executada com argumentos ([<PessoaFisica: ('01')>, <PessoaFisica: ('03')>],) e {}. Retornou None
+[2025-02-19 20:09:51] Função 'criar_conta' executada com argumentos (2, [<PessoaFisica: ('01')>, <PessoaFisica: ('03')>], [<__main__.ContaCorrente object at 0x000002D458110050>, <__main__.ContaCorrente object at 0x000002D4580D9A90>]) e {}. Retornou None
+[2025-02-19 20:55:16] Função 'criar_cliente' executada com argumentos ([<PessoaFisica: ('01')>, <PessoaFisica: ('03')>],) e {}. Retornou None
+[2025-02-19 20:55:50] Função 'criar_cliente' executada com argumentos ([<PessoaFisica: ('01')>, <PessoaFisica: ('03')>],) e {}. Retornou None
